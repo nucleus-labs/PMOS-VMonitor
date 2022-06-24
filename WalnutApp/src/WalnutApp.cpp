@@ -1,38 +1,46 @@
 #include "Walnut/Application.h"
 #include "Walnut/EntryPoint.h"
+//#include "Walnut/Image.h"
 
-#include "Walnut/Image.h"
+#include "VMonitorLayer.h"
+#include "SerialComms.h"
+#include "NestedLayer.h"
 
-class ExampleLayer : public Walnut::Layer
+
+class LayerNestedVMonitorGroup : public NestedLayer
 {
-public:
-	virtual void OnUIRender() override
+	void _onAttach() override
 	{
-		ImGui::Begin("Hello");
-		ImGui::Button("Button");
-		ImGui::End();
+		LayerVirtualMonitor* vmonitor = new LayerVirtualMonitor(640, 480);
+		LayerSerialInterface* serial_interface = new LayerSerialInterface(
+			new serial::Serial(
+				"com10", 9600,
+				serial::Timeout::simpleTimeout(1000),
+				serial::eightbits, serial::parity_none,
+				serial::stopbits_one, serial::flowcontrol_none,
+				serial::dtr_enable
+			),
+			vmonitor
+		);
 
-		ImGui::ShowDemoWindow();
+		children.push_back(serial_interface);
+		children.push_back(vmonitor);
+
+		std::cout << "test" << std::endl;
 	}
+
+	void _onUIRender() override {}
 };
+
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
 	Walnut::ApplicationSpecification spec;
-	spec.Name = "Walnut Example";
+	spec.Name = "PMOS Virtual Monitor";
+	spec.Width = 640;
+	spec.Height = 480;
 
 	Walnut::Application* app = new Walnut::Application(spec);
-	app->PushLayer<ExampleLayer>();
-	app->SetMenubarCallback([app]()
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Exit"))
-			{
-				app->Close();
-			}
-			ImGui::EndMenu();
-		}
-	});
+	app->PushLayer<LayerNestedVMonitorGroup>();
 	return app;
 }
