@@ -12,6 +12,7 @@ project "Walnut"
       "../vendor/imgui",
       "../vendor/glfw/include",
       "../vendor/stb_image",
+      "../vendor/serial",
 
       "%{IncludeDir.VulkanSDK}",
       "%{IncludeDir.glm}",
@@ -21,6 +22,7 @@ project "Walnut"
    {
        "ImGui",
        "GLFW",
+       "Serial",
 
        "%{Library.Vulkan}",
    }
@@ -48,3 +50,9 @@ project "Walnut"
       runtime "Release"
       optimize "On"
       symbols "Off"
+
+   filter "configurations:Tests"
+      defines { "WL_DIST", "WL_TESTS" }
+      runtime "Release"
+      optimize "On"
+      symbols "On"
