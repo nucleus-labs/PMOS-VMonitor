@@ -16,6 +16,7 @@ project "WalnutApp"
 
       "%{IncludeDir.VulkanSDK}",
       "%{IncludeDir.glm}",
+      "%{IncludeDir.Serial}/include",
    }
 
     links

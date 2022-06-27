@@ -12,10 +12,10 @@ project "Walnut"
       "../vendor/imgui",
       "../vendor/glfw/include",
       "../vendor/stb_image",
-      "../vendor/serial",
 
       "%{IncludeDir.VulkanSDK}",
       "%{IncludeDir.glm}",
+      "%{IncludeDir.Serial}",
    }
 
    links
@@ -55,4 +55,4 @@ project "Walnut"
       defines { "WL_DIST", "WL_TESTS" }
       runtime "Release"
       optimize "On"
-      symbols "On"
+      symbols "Off"
